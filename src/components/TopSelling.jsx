@@ -1,36 +1,10 @@
 import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 import { Link } from "react-router-dom";
-
-const products = [
-  {
-    title: "Graphic T-Shirt",
-    price: 130,
-    rating: 4.5,
-    image: "https://images.unsplash.com/photo-1512436991641-6745cdb1723f",
-  },
-  {
-    title: "Leather Jacket",
-    price: 210,
-    oldPrice: 260,
-    rating: 3.5,
-    image: "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c",
-  },
-  {
-    title: "Casual Hoodie",
-    price: 200,
-    rating: 5,
-    image: "https://images.unsplash.com/photo-1520975916090-3105956dac38",
-  },
-  {
-    title: "Slim Fit Jeans",
-    price: 150,
-    oldPrice: 180,
-    rating: 4.5,
-    image: "https://images.unsplash.com/photo-1523381210434-271e8be1f52b",
-  },
-];
+import { getBestSellers } from "../data/products";
 
 function TopSelling() {
+  const products = getBestSellers().slice(0, 4);
+
   return (
     <section className="w-full px-4 sm:px-6 lg:px-12 py-8 sm:py-12 lg:py-16 border-t">
 
@@ -42,10 +16,15 @@ function TopSelling() {
       {/* PRODUCTS GRID */}
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
 
-        {products.map((product, index) => (
-          <Link to="/product" key={index} className="group cursor-pointer">
+        {products.map((product) => (
+          <Link to={`/product/${product.id}`} key={product.id} className="group cursor-pointer">
             {/* IMAGE */}
-            <div className="bg-gray-100 p-3 sm:p-4 rounded-lg sm:rounded-xl overflow-hidden">
+            <div className="bg-gray-100 p-3 sm:p-4 rounded-lg sm:rounded-xl overflow-hidden relative">
+              {product.discount && (
+                <span className="absolute top-2 right-2 bg-red-500 text-white text-[10px] px-2 py-1 rounded z-10">
+                  -{product.discount}%
+                </span>
+              )}
               <img
                 src={product.image}
                 alt={product.title}
@@ -71,7 +50,12 @@ function TopSelling() {
               <div className="mt-1 sm:mt-2 flex flex-wrap gap-1 sm:gap-2 items-center">
                 <span className="font-bold text-sm sm:text-base lg:text-lg">${product.price}</span>
                 {product.oldPrice && (
-                  <span className="line-through text-gray-400 text-xs sm:text-sm">${product.oldPrice}</span>
+                  <>
+                    <span className="line-through text-gray-400 text-xs sm:text-sm">${product.oldPrice}</span>
+                    <span className="text-[10px] sm:text-xs bg-red-100 text-red-500 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full">
+                      -{Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)}%
+                    </span>
+                  </>
                 )}
               </div>
             </div>

@@ -1,25 +1,80 @@
 import { useState } from "react";
-import { FaStar } from "react-icons/fa";
+import { FaStar, FaStarHalfAlt, FaRegStar, FaCheck } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { useCart } from "../context/CartContext";
 
-function ProductDetailsTop() {
-  const [selectedSize, setSelectedSize] = useState("Large");
+function ProductDetailsTop({ product }) {
+  const { addToCart } = useCart();
+  const [selectedSize, setSelectedSize] = useState(product?.sizes?.[2] || "Large");
   const [selectedColor, setSelectedColor] = useState(0);
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const [addedToCart, setAddedToCart] = useState(false);
 
-  const colors = ["#5C4B2E", "#2F4F4F", "#2E2E5D"];
-  const images = [
-    "https://via.placeholder.com/450?text=View+1",
-    "https://via.placeholder.com/450?text=View+2",
-    "https://via.placeholder.com/450?text=View+3",
-  ];
+  // Default product if none provided
+  const defaultProduct = {
+    id: 1,
+    title: "ONE LIFE GRAPHIC T-SHIRT",
+    description: "This graphic t-shirt which is perfect for any occasion. Crafted from a soft and breathable fabric, it offers superior comfort and style.",
+    price: 260,
+    oldPrice: 300,
+    rating: 4.5,
+    reviews: 156,
+    images: [
+      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab",
+      "https://images.unsplash.com/photo-1503341504253-dff4815485f1",
+      "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a",
+    ],
+    colors: ["#5C4B2E", "#2F4F4F", "#2E2E5D"],
+    sizes: ["Small", "Medium", "Large", "X-Large"],
+    category: "t-shirts",
+  };
+
+  const currentProduct = product || defaultProduct;
+  const images = currentProduct.images || [currentProduct.image];
+  const colors = currentProduct.colors || ["#000000"];
+  const sizes = currentProduct.sizes || ["Small", "Medium", "Large", "X-Large"];
+  const discount = currentProduct.oldPrice 
+    ? Math.round(((currentProduct.oldPrice - currentProduct.price) / currentProduct.oldPrice) * 100)
+    : null;
+
+  const handleAddToCart = () => {
+    addToCart(
+      {
+        id: currentProduct.id,
+        title: currentProduct.title,
+        price: currentProduct.price,
+        image: images[0],
+      },
+      quantity,
+      selectedSize,
+      colors[selectedColor]
+    );
+    setAddedToCart(true);
+    setTimeout(() => setAddedToCart(false), 2000);
+  };
+
+  // Render stars based on rating
+  const renderStars = (rating) => {
+    return [...Array(5)].map((_, i) => {
+      if (i + 1 <= Math.floor(rating)) return <FaStar key={i} />;
+      if (i < rating) return <FaStarHalfAlt key={i} />;
+      return <FaRegStar key={i} />;
+    });
+  };
 
   return (
     <section className="w-full px-4 sm:px-6 lg:px-12 xl:px-16 py-6 sm:py-8 lg:py-12">
 
       {/* BREADCRUMB */}
-      <div className="text-xs sm:text-sm text-gray-400 mb-4 sm:mb-6 lg:mb-10">
-        Home &gt; Shop &gt; Men &gt; T-shirts
+      <div className="text-xs sm:text-sm text-gray-400 mb-4 sm:mb-6 lg:mb-10 flex items-center gap-2">
+        <Link to="/" className="hover:text-gray-600">Home</Link>
+        <span>&gt;</span>
+        <Link to="/category" className="hover:text-gray-600">Shop</Link>
+        <span>&gt;</span>
+        <Link to={`/category?category=${currentProduct.category}`} className="hover:text-gray-600 capitalize">
+          {currentProduct.category}
+        </Link>
       </div>
 
       {/* MAIN LAYOUT */}
@@ -40,7 +95,7 @@ function ProductDetailsTop() {
               >
                 <img
                   src={img}
-                  alt={`thumbnail ${i + 1}`}
+                  alt={`${currentProduct.title} view ${i + 1}`}
                   className="w-full h-16 sm:h-20 lg:h-24 object-cover rounded"
                 />
               </div>
@@ -51,7 +106,7 @@ function ProductDetailsTop() {
           <div className="flex-1 bg-gray-100 rounded-xl sm:rounded-2xl flex items-center justify-center p-4 sm:p-6 lg:p-8">
             <img
               src={images[selectedImage]}
-              alt="product"
+              alt={currentProduct.title}
               className="w-full h-64 sm:h-80 lg:h-96 xl:h-[450px] object-contain"
             />
           </div>
@@ -60,34 +115,38 @@ function ProductDetailsTop() {
         {/* RIGHT: PRODUCT DETAILS */}
         <div className="lg:pl-4 xl:pl-8">
 
-          <h1 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-extrabold mb-3 sm:mb-4 leading-tight">
-            ONE LIFE GRAPHIC T-SHIRT
+          <h1 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-extrabold mb-3 sm:mb-4 leading-tight uppercase">
+            {currentProduct.title}
           </h1>
 
           {/* RATING */}
           <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-5">
             <div className="flex text-yellow-400 text-sm sm:text-base">
-              {[...Array(5)].map((_, i) => (
-                <FaStar key={i} />
-              ))}
+              {renderStars(currentProduct.rating)}
             </div>
-            <span className="text-xs sm:text-sm text-gray-500">4.5/5</span>
+            <span className="text-xs sm:text-sm text-gray-500">
+              {currentProduct.rating}/5 ({currentProduct.reviews} reviews)
+            </span>
           </div>
 
           {/* PRICE */}
           <div className="flex flex-wrap items-center gap-2 sm:gap-3 lg:gap-4 mb-4 sm:mb-6">
-            <span className="text-xl sm:text-2xl lg:text-3xl font-bold">$260</span>
-            <span className="text-base sm:text-lg lg:text-xl text-gray-400 line-through">$300</span>
-            <span className="text-xs sm:text-sm bg-red-100 text-red-500 px-2 sm:px-3 py-1 rounded-full">
-              -40%
-            </span>
+            <span className="text-xl sm:text-2xl lg:text-3xl font-bold">${currentProduct.price}</span>
+            {currentProduct.oldPrice && (
+              <>
+                <span className="text-base sm:text-lg lg:text-xl text-gray-400 line-through">
+                  ${currentProduct.oldPrice}
+                </span>
+                <span className="text-xs sm:text-sm bg-red-100 text-red-500 px-2 sm:px-3 py-1 rounded-full">
+                  -{discount}%
+                </span>
+              </>
+            )}
           </div>
 
           {/* DESCRIPTION */}
           <p className="text-sm sm:text-base text-gray-600 leading-relaxed mb-4 sm:mb-6">
-            This graphic t-shirt which is perfect for any occasion.
-            Crafted from a soft and breathable fabric, it offers superior
-            comfort and style.
+            {currentProduct.description}
           </p>
 
           <hr className="mb-4 sm:mb-6" />
@@ -97,14 +156,18 @@ function ProductDetailsTop() {
             <p className="text-xs sm:text-sm font-medium mb-2 sm:mb-3">Select Colors</p>
             <div className="flex gap-3 sm:gap-4">
               {colors.map((color, i) => (
-                <span
+                <button
                   key={i}
                   onClick={() => setSelectedColor(i)}
                   style={{ backgroundColor: color }}
-                  className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full cursor-pointer transition-all ${
+                  className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full cursor-pointer transition-all flex items-center justify-center ${
                     selectedColor === i ? "ring-2 ring-offset-2 ring-black" : "hover:scale-110"
                   }`}
-                />
+                >
+                  {selectedColor === i && (
+                    <FaCheck className={`text-xs ${color === "#FFFFFF" || color === "#FFC0CB" || color === "#87CEEB" ? "text-black" : "text-white"}`} />
+                  )}
+                </button>
               ))}
             </div>
           </div>
@@ -115,7 +178,7 @@ function ProductDetailsTop() {
           <div className="mb-6 sm:mb-8">
             <p className="text-xs sm:text-sm font-medium mb-2 sm:mb-3">Choose Size</p>
             <div className="flex flex-wrap gap-2 sm:gap-3">
-              {["Small", "Medium", "Large", "X-Large"].map((size) => (
+              {sizes.map((size) => (
                 <button
                   key={size}
                   onClick={() => setSelectedSize(size)}
@@ -152,8 +215,21 @@ function ProductDetailsTop() {
               </button>
             </div>
 
-            <button className="flex-1 sm:flex-none sm:w-48 lg:w-56 xl:w-60 bg-black text-white py-3 sm:py-4 rounded-full text-sm font-medium hover:bg-gray-800 transition-colors">
-              Add to Cart
+            <button 
+              onClick={handleAddToCart}
+              className={`flex-1 sm:flex-none sm:w-48 lg:w-56 xl:w-60 py-3 sm:py-4 rounded-full text-sm font-medium transition-all flex items-center justify-center gap-2 ${
+                addedToCart 
+                  ? "bg-green-600 text-white" 
+                  : "bg-black text-white hover:bg-gray-800"
+              }`}
+            >
+              {addedToCart ? (
+                <>
+                  <FaCheck /> Added to Cart
+                </>
+              ) : (
+                "Add to Cart"
+              )}
             </button>
 
           </div>
