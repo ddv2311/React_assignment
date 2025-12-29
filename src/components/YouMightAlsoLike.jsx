@@ -1,4 +1,5 @@
 import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 function YouMightAlsoLike() {
   const products = [
@@ -33,35 +34,35 @@ function YouMightAlsoLike() {
   ];
 
   return (
-    <section className="w-full px-4 sm:px-8 lg:px-16 py-12 sm:py-16 lg:py-20">
+    <section className="w-full px-4 sm:px-6 lg:px-12 xl:px-16 py-8 sm:py-12 lg:py-16">
 
       {/* TITLE */}
-      <h2 className="text-2xl sm:text-3xl font-extrabold text-center mb-10 sm:mb-14">
+      <h2 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-center mb-6 sm:mb-8 lg:mb-12">
         YOU MIGHT ALSO LIKE
       </h2>
 
       {/* PRODUCTS GRID */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 sm:gap-10">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
         {products.map((product, index) => (
-          <div key={index} className="flex flex-col">
+          <Link to="/product" key={index} className="flex flex-col group cursor-pointer">
 
             {/* IMAGE */}
-            <div className="bg-gray-100 rounded-2xl p-6 sm:p-8 flex items-center justify-center mb-4">
+            <div className="bg-gray-100 rounded-xl sm:rounded-2xl p-4 sm:p-6 flex items-center justify-center mb-3 sm:mb-4 overflow-hidden">
               <img
                 src={product.image}
                 alt={product.title}
-                className="h-48 sm:h-56 object-contain"
+                className="h-32 sm:h-40 lg:h-48 xl:h-56 object-contain group-hover:scale-105 transition-transform duration-300"
               />
             </div>
 
             {/* TITLE */}
-            <h3 className="font-semibold mb-2 text-center sm:text-left">
+            <h3 className="font-semibold text-sm sm:text-base mb-1 sm:mb-2 line-clamp-1">
               {product.title}
             </h3>
 
             {/* RATING */}
-            <div className="flex items-center gap-2 mb-2">
-              <div className="flex text-yellow-400">
+            <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
+              <div className="flex text-yellow-400 text-xs sm:text-sm">
                 {Array.from({ length: 5 }).map((_, i) => {
                   if (i + 1 <= Math.floor(product.rating)) {
                     return <FaStar key={i} />;
@@ -72,28 +73,28 @@ function YouMightAlsoLike() {
                   return <FaRegStar key={i} />;
                 })}
               </div>
-              <span className="text-sm text-gray-500">
+              <span className="text-xs sm:text-sm text-gray-500">
                 {product.rating}/5
               </span>
             </div>
 
             {/* PRICE */}
-            <div className="flex items-center gap-3">
-              <span className="text-lg font-bold">${product.price}</span>
+            <div className="flex flex-wrap items-center gap-1 sm:gap-2 lg:gap-3">
+              <span className="text-sm sm:text-base lg:text-lg font-bold">${product.price}</span>
 
               {product.oldPrice && (
                 <>
-                  <span className="text-gray-400 line-through">
+                  <span className="text-gray-400 line-through text-xs sm:text-sm">
                     ${product.oldPrice}
                   </span>
-                  <span className="text-xs bg-red-100 text-red-500 px-2 py-1 rounded-full">
+                  <span className="text-[10px] sm:text-xs bg-red-100 text-red-500 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full">
                     {product.discount}
                   </span>
                 </>
               )}
             </div>
 
-          </div>
+          </Link>
         ))}
       </div>
     </section>

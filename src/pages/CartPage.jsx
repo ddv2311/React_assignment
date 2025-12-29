@@ -11,21 +11,21 @@ function CartPage() {
     <Header/>
 
 
-    <section className="w-full px-16 py-12 ">
+    <section className="w-full px-4 sm:px-6 lg:px-12 xl:px-16 py-6 sm:py-8 lg:py-12">
     
       {/* BREADCRUMB */}
-      <div className="text-sm text-gray-400 mb-6">
+      <div className="text-xs sm:text-sm text-gray-400 mb-4 sm:mb-6">
         Home &gt; Cart
       </div>
 
       {/* PAGE TITLE */}
-      <h1 className="text-4xl font-extrabold mb-10">YOUR CART</h1>
+      <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold mb-6 sm:mb-8 lg:mb-10">YOUR CART</h1>
 
       {/* MAIN GRID */}
-      <div className="grid grid-cols-[2fr_1fr] gap-12 items-start mb-30">
+      <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] xl:grid-cols-[2fr_1fr] gap-6 lg:gap-8 xl:gap-12 items-start mb-10 lg:mb-20">
 
         {/* ================= LEFT: CART ITEMS ================= */}
-        <div className="border rounded-2xl p-8 space-y-8">
+        <div className="border rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8">
 
           {/* ITEM 1 */}
           <CartItem
@@ -36,14 +36,20 @@ function CartPage() {
             image="https://via.placeholder.com/120"
           />
 
+          <hr className="border-gray-200" />
+
           {/* ITEM 2 */}
           <CartItem
             title="Checkered Shirt"
             size="Medium"
             color="Red"
             price="$180"
-            image="https://via.placeholder.com/120"/>
-              {/* ITEM 3 */}
+            image="https://via.placeholder.com/120"
+          />
+
+          <hr className="border-gray-200" />
+
+          {/* ITEM 3 */}
           <CartItem
             title="Skinny Fit Jeans"
             size="Large"
@@ -55,11 +61,11 @@ function CartPage() {
         </div>
 
         {/* ================= RIGHT: ORDER SUMMARY ================= */}
-        <div className="border rounded-2xl p-8">
+        <div className="border rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8">
 
-          <h2 className="text-xl font-bold mb-6">Order Summary</h2>
+          <h2 className="text-lg sm:text-xl font-bold mb-4 sm:mb-6">Order Summary</h2>
 
-          <div className="space-y-4 text-sm">
+          <div className="space-y-3 sm:space-y-4 text-sm">
 
             <div className='flex justify-between'>
               <span className="text-gray-500">Subtotal</span>
@@ -77,26 +83,26 @@ function CartPage() {
             </div>
 
             <hr />
-             <div className="flex justify-between text-lg font-bold">
+            <div className="flex justify-between text-base sm:text-lg font-bold">
               <span>Total</span>
               <span>$467</span>
             </div>
           </div>
 
           {/* PROMO CODE */}
-          <div className="flex gap-3 mt-6">
+          <div className="flex flex-col sm:flex-row gap-3 mt-4 sm:mt-6">
             <input
               type="text"
               placeholder="Add promo code"
-              className="flex-1 bg-gray-100 rounded-full px-5 py-3 text-sm outline-none"
+              className="flex-1 bg-gray-100 rounded-full px-4 sm:px-5 py-3 text-sm outline-none"
             />
-            <button className="bg-black text-white px-6 rounded-full text-sm">
+            <button className="bg-black text-white px-6 py-3 sm:py-0 rounded-full text-sm font-medium">
               Apply
             </button>
           </div>
 
           {/* CHECKOUT */}
-          <button className="w-full bg-black text-white py-4 rounded-full mt-6 flex items-center justify-center gap-2 text-sm font-medium">
+          <button className="w-full bg-black text-white py-3 sm:py-4 rounded-full mt-4 sm:mt-6 flex items-center justify-center gap-2 text-sm font-medium">
             Go to Checkout →
           </button>
 
